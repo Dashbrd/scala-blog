@@ -8,8 +8,10 @@ import play.api.libs.json._
 import play.api.mvc._
 import play.modules.reactivemongo._
 import reactivemongo.api.ReadPreference
+import reactivemongo.api.commands.WriteResult
 import reactivemongo.play.json._
 import reactivemongo.play.json.collection._
+import services.MongoRepository
 import utils.Errors
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -20,15 +22,14 @@ import scala.concurrent.{ExecutionContext, Future}
   * Input is first converted into a city and then the city is converted to JsObject to be stored in MongoDB
   */
 @Singleton
-class CityController @Inject()(val reactiveMongoApi: ReactiveMongoApi)(implicit exec: ExecutionContext) extends Controller with MongoController with ReactiveMongoComponents {
+class CityController @Inject()(val reactiveMongoApi: ReactiveMongoApi)(val mongoRepository: MongoRepository)(implicit exec: ExecutionContext) extends Controller with MongoController with ReactiveMongoComponents {
 
   def citiesFuture: Future[JSONCollection] = database.map(_.collection[JSONCollection]("city"))
 
   def create(name: String, population: Int) = Action.async {
     for {
-      cities <- citiesFuture
-      lastError <- cities.insert(City(name, population))
-    } yield
+      lastError: WriteResult <- mongoRepository.createCity(City(name,population))
+    }yield
       Ok("Mongo LastError: %s".format(lastError))
   }
 
