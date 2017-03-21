@@ -1,4 +1,4 @@
-name := """play-reactive-mongo-db"""
+name := """scala-blog"""
 
 version := "1.0-SNAPSHOT"
 
