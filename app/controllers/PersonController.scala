@@ -8,7 +8,7 @@ import play.api.libs.json.Reads._
 import play.api.libs.json._
 import play.api.mvc._
 import play.modules.reactivemongo._
-import reactivemongo.api.ReadPreference
+import reactivemongo.api.{Cursor, ReadPreference}
 import reactivemongo.play.json._
 import reactivemongo.play.json.collection.JSONCollection
 
@@ -82,7 +82,7 @@ class PersonController @Inject()(val reactiveMongoApi: ReactiveMongoApi)(implici
       // sort them by creation date
       sort(Json.obj("created" -> -1)).
       // perform the query and get a cursor of JsObject
-      cursor[JsObject](ReadPreference.primary).collect[List]()
+      cursor[JsObject](ReadPreference.primary).collect[List](Int.MaxValue,Cursor.FailOnError[List[JsObject]]())
   }
 
     // everything's ok! Let's reply with a JsValue
