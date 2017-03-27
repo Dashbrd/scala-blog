@@ -12,6 +12,7 @@ import scala.concurrent.{ExecutionContext, Future}
   * Created by Ankesh Dave on 3/21/2017.
   */
 class MongoRepository @Inject()(val reactiveMongoApi: ReactiveMongoApi)(implicit executionContext: ExecutionContext){
+  println("Mock Repo Initialized")
  def citiesFuture: Future[JSONCollection] = reactiveMongoApi.database.map(_.collection[JSONCollection]("city"))
 
   def createCity (city: City): Future[WriteResult] = {
