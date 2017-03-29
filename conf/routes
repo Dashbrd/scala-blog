@@ -1,4 +1,6 @@
 
+GET         /                       controllers.BlogController.getBlogs()
+
 POST     /cities/add                controllers.CityController.create(name: String, population: Int)
 
 POST     /persons/add               controllers.PersonController.create(name: String, age: Int)
@@ -6,4 +8,3 @@ POST     /persons/                  controllers.PersonController.createFromJson
 POST     /persons/bulk              controllers.PersonController.createBulkFromJson
 
 GET      /persons                   controllers.PersonController.findByName(name: String)
-

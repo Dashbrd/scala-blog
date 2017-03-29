@@ -28,7 +28,7 @@ class PersonController @Inject()(val reactiveMongoApi: ReactiveMongoApi)(implici
 
   def personsFuture: Future[JSONCollection] = database.map(_.collection[JSONCollection]("persons"))
 
-  def create(name: String, age: Int) = Action.async {
+  def create(name: String, age: Int): Action[AnyContent] = Action.async {
     val json = Json.obj(
       "name" -> name,
       "age" -> age,
@@ -74,7 +74,7 @@ class PersonController @Inject()(val reactiveMongoApi: ReactiveMongoApi)(implici
     }
   }
 
-  def findByName(name: String) = Action.async {
+  def findByName(name: String): Action[AnyContent] = Action.async {
     // let's do our query
     val cursor: Future[List[JsObject]] = personsFuture.flatMap{ persons =>
       // find all people with name `name`
