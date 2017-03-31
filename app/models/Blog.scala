@@ -7,7 +7,7 @@ import reactivemongo.play.json._
 /**
   * Created by Ankesh on 3/28/2017.
   */
-case class Blog(_id: Option[String],title:String, author:String, body:String) {
+case class Blog(_id: Option[BSONObjectID],title:String, author:String, body:String) {
 }
 object Blog {
   implicit val formatter: OFormat[Blog] = Json.format[Blog]
