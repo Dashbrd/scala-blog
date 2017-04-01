@@ -1,7 +1,11 @@
 
-GET         /                       controllers.BlogController.getBlogs()
+GET     /                           controllers.BlogController.getBlogs()
+# Blog
+
 GET     /blog/:id                   controllers.BlogController.getBlog(id: String)
-POST    /blog/add                   controllers.BlogController.addBlog
+PUT     /blog/:id                   controllers.BlogController.editBlog(id : String)
+POST    /blog                       controllers.BlogController.addBlog
+DELETE  /blog/:id                   controllers.BlogController.deleteBlog(id : String)
 
 
 POST     /cities/add                controllers.CityController.create(name: String, population: Int)

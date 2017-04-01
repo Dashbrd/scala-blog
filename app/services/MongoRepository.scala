@@ -8,6 +8,7 @@ import reactivemongo.api.commands.WriteResult
 import reactivemongo.api.{Cursor, ReadPreference}
 import reactivemongo.bson.{BSONDocument, BSONObjectID}
 import reactivemongo.play.json._
+import reactivemongo.play.json.collection.JSONBatchCommands.FindAndModifyCommand
 import reactivemongo.play.json.collection.JSONCollection
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -16,8 +17,29 @@ import scala.concurrent.{ExecutionContext, Future}
   * Created by Ankesh Dave on 3/21/2017.
   */
 class MongoRepository @Inject()(val reactiveMongoApi: ReactiveMongoApi)(implicit executionContext: ExecutionContext) {
+  def deleteBlog(id: String): Future[Boolean] = {
+    for {
+      blogCollection <- blogsFuture
+      query = BSONDocument("_id" -> BSONObjectID.parse(id).get)
+      result: WriteResult <- blogCollection.remove(query)
+    } yield {
+       result.ok
+    }
+  }
+
+
+  def updateBlog(id: String, blog: Blog): Future[Option[Blog]] = {
+    for {
+      blogCollection: JSONCollection <- blogsFuture
+      query: BSONDocument = BSONDocument("_id" -> BSONObjectID.parse(id).get)
+      returnValue: FindAndModifyCommand.FindAndModifyResult <- blogCollection.findAndUpdate(query,blog , true)
+      result: Option[Blog] = returnValue.result[Blog]
+    } yield {
+      result
+    }
+  }
+
   def getBlog(id: String): Future[Option[Blog]] = {
-    import play.modules.reactivemongo._
     for{
       blogCollection: JSONCollection <- blogsFuture
       query  = BSONDocument("_id" -> BSONObjectID.parse(id).get)
